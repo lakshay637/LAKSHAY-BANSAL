@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent-color: #fbbf24;
+  --accent-rgb: 251, 191, 36;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #070709;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f1f28;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--accent-rgb), 0.5);
+}
+
+/* Base style resets */
+body {
+  background-color: #070709;
+  color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Dynamic Accent Utilities */
+.text-accent {
+  color: var(--accent-color);
+}
+.bg-accent {
+  background-color: var(--accent-color);
+}
+.border-accent {
+  border-color: var(--accent-color);
+}
+
+/* Custom Text Outline Effect for Hero & Contact Headlines */
+.text-outline {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
+  color: transparent;
+}
+.text-outline:hover {
+  -webkit-text-stroke: 1.5px var(--accent-color);
+}
+
+/* Custom Utilities */
+.glass-panel {
+  background: rgba(14, 14, 19, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(17, 17, 24, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(var(--accent-rgb), 0.15);
+}
+
+/* Subtle grid overlay */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
