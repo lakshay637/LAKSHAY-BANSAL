@@ -9,6 +9,7 @@ import ExperienceSection from './components/ExperienceSection';
 import ProjectsSection from './components/ProjectsSection';
 import ProjectModal from './components/ProjectModal';
 import ResumeModal from './components/ResumeModal';
+import TerminalDrawer from './components/TerminalDrawer';
 import ContactSection from './components/ContactSection';
 import ThemeCustomizer from './components/ThemeCustomizer';
 import Toast from './components/Toast';
@@ -81,6 +82,7 @@ function AppContent() {
       {/* Global Drawers & Modals */}
       <ProjectModal />
       <ResumeModal />
+      <TerminalDrawer />
       <ThemeCustomizer />
       <Toast />
     </div>

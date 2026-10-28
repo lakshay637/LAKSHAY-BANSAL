@@ -3,7 +3,7 @@ import { X, ExternalLink, Github, CheckCircle2, Zap, Layers } from 'lucide-react
 import { useTheme } from '../context/ThemeContext';
 
 export default function ProjectModal() {
-  const { activeProjectModal, setActiveProjectModal, addToast } = useTheme();
+  const { activeProjectModal, setActiveProjectModal, addToast, playSound } = useTheme();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -21,7 +21,13 @@ export default function ProjectModal() {
   const Icon = project.icon || Layers;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div
+      onClick={() => {
+        setActiveProjectModal(null);
+        playSound?.('click');
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+    >
       {/* Modal Card Container */}
       <div
         onClick={(e) => e.stopPropagation()}
@@ -29,7 +35,10 @@ export default function ProjectModal() {
       >
         {/* Close Button */}
         <button
-          onClick={() => setActiveProjectModal(null)}
+          onClick={() => {
+            setActiveProjectModal(null);
+            playSound?.('click');
+          }}
           className="absolute top-5 right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition"
         >
           <X className="w-5 h-5" />
@@ -122,13 +131,14 @@ export default function ProjectModal() {
           <button
             onClick={() => {
               addToast(`Launching demo preview for ${project.title}`, 'success');
+              playSound?.('open');
             }}
             className="px-6 py-3 rounded-xl bg-accent hover:opacity-90 text-black font-extrabold text-xs transition flex items-center gap-2 shadow-md shadow-accent/20"
           >
             <ExternalLink className="w-4 h-4" /> Open Live Application
           </button>
           <a
-            href={project.githubUrl}
+            href="https://github.com/lakshay637"
             target="_blank"
             rel="noreferrer"
             className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition flex items-center gap-2"

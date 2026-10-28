@@ -3,7 +3,7 @@ import { X, Download, Printer, Phone, Mail, Linkedin, Github, Award, GraduationC
 import { useTheme } from '../context/ThemeContext';
 
 export default function ResumeModal() {
-  const { resumeModalOpen, setResumeModalOpen, addToast } = useTheme();
+  const { resumeModalOpen, setResumeModalOpen, addToast, playSound } = useTheme();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -18,15 +18,23 @@ export default function ResumeModal() {
   if (!resumeModalOpen) return null;
 
   const handlePrint = () => {
+    playSound?.('click');
     window.print();
   };
 
   const handleDownload = () => {
-    addToast("Downloading Lakshay Bansal's Official Resume...", 'success');
+    addToast("Generating official PDF print preview...", 'success');
+    playSound?.('success');
+    setTimeout(() => {
+      window.print();
+    }, 350);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div
+      onClick={() => setResumeModalOpen(false)}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+    >
       {/* Modal Container */}
       <div
         onClick={(e) => e.stopPropagation()}
@@ -51,14 +59,17 @@ export default function ResumeModal() {
 
             <button
               onClick={handleDownload}
-              title="Download PDF"
+              title="Download or Save as PDF"
               className="px-4 py-2 rounded-xl bg-accent text-black font-bold text-xs hover:opacity-90 transition flex items-center gap-1.5 shadow-md shadow-accent/20"
             >
               <Download className="w-4 h-4" /> Download PDF
             </button>
 
             <button
-              onClick={() => setResumeModalOpen(false)}
+              onClick={() => {
+                setResumeModalOpen(false);
+                playSound?.('click');
+              }}
               className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition"
             >
               <X className="w-5 h-5" />
@@ -101,7 +112,7 @@ export default function ResumeModal() {
               <Briefcase className="w-4 h-4" /> Professional Summary
             </h2>
             <p className="text-xs sm:text-sm leading-relaxed text-slate-300">
-              Results-driven Full Stack Developer with hands-on experience in building responsive web applications using the MERN stack (MongoDB, Express.js, React.js, Node.js). Skilled in developing secure backend APIs, database management, and creating user-friendly interfaces. Proficient in C, Java, Python, SQL, and API testing with Postman, backed by strong analytical and problem-solving abilities with a passion for learning new technologies.
+              Proficient Full Stack Developer pursuing B.Tech in Computer Science and Engineering (CORE) at Noida International University with a strong academic standing (CGPA: 8.1/10). Skilled in developing responsive web platforms with the MERN stack, designing RESTful APIs, and implementing robust backend architectures backed by strong foundation in C, Java, Python, and SQL.
             </p>
           </div>
 
@@ -110,14 +121,14 @@ export default function ResumeModal() {
             <h2 className="text-xs font-mono font-extrabold text-accent uppercase tracking-widest border-b border-white/10 pb-1 flex items-center gap-2">
               <GraduationCap className="w-4 h-4" /> Education
             </h2>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 bg-white/5 p-4 rounded-xl border border-white/5">
-              <div>
-                <h3 className="text-sm font-bold text-white">B.Tech in Computer Science (CORE)</h3>
-                <p className="text-xs text-slate-400">Noida International University, Greater Noida</p>
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs sm:text-sm">
+                <span className="font-bold text-white">Noida International University</span>
+                <span className="text-slate-400 font-mono">Greater Noida, India (2023 – 2027)</span>
               </div>
-              <div className="text-right sm:text-right text-xs font-mono">
-                <span className="text-accent font-bold">2023 – 2027</span>
-                <p className="text-slate-300 font-semibold">CGPA: 8.1 / 10</p>
+              <div className="text-xs text-accent font-semibold flex items-center justify-between">
+                <span>B.Tech in Computer Science and Engineering (CORE)</span>
+                <span className="font-mono bg-accent/10 border border-accent/20 px-2.5 py-0.5 rounded-full text-white">CGPA: 8.1 / 10</span>
               </div>
             </div>
           </div>
@@ -125,28 +136,28 @@ export default function ResumeModal() {
           {/* Projects */}
           <div className="space-y-4">
             <h2 className="text-xs font-mono font-extrabold text-accent uppercase tracking-widest border-b border-white/10 pb-1 flex items-center gap-2">
-              <Code2 className="w-4 h-4" /> Key Projects
+              <Code2 className="w-4 h-4" /> Technical Projects
             </h2>
 
             {/* Project 1 */}
-            <div className="space-y-2 bg-white/5 p-4 rounded-xl border border-white/5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <h3 className="text-sm font-bold text-white">Expense Tracker Web App</h3>
-                <span className="text-xs font-mono text-accent">MERN Stack (React.js, Node.js, Express.js, MongoDB)</span>
+            <div className="space-y-1.5 text-xs sm:text-sm">
+              <div className="flex items-center justify-between font-bold text-white">
+                <span>Expense Tracker Web Application</span>
+                <span className="text-accent font-mono text-xs">MERN Stack</span>
               </div>
-              <ul className="list-disc list-inside text-xs text-slate-300 space-y-1 pl-1">
+              <ul className="list-disc list-inside space-y-1 text-slate-300 text-xs pl-1">
                 <li>Developed a responsive expense tracking application featuring secure authentication mechanisms and robust backend APIs.</li>
                 <li>Improved overall application stability and performance by implementing reusable UI layouts and comprehensive error handling techniques.</li>
               </ul>
             </div>
 
             {/* Project 2 */}
-            <div className="space-y-2 bg-white/5 p-4 rounded-xl border border-white/5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <h3 className="text-sm font-bold text-white">Calculator Web Application</h3>
-                <span className="text-xs font-mono text-accent">JavaScript, HTML5, CSS3</span>
+            <div className="space-y-1.5 text-xs sm:text-sm">
+              <div className="flex items-center justify-between font-bold text-white">
+                <span>Calculator Web Application</span>
+                <span className="text-accent font-mono text-xs">JavaScript, HTML5, CSS3</span>
               </div>
-              <ul className="list-disc list-inside text-xs text-slate-300 space-y-1 pl-1">
+              <ul className="list-disc list-inside space-y-1 text-slate-300 text-xs pl-1">
                 <li>Built an interactive and highly responsive calculator application featuring an intuitive user interface and smooth input animations.</li>
                 <li>Implemented robust arithmetic validation logic to gracefully handle complex operational sequences and edge cases, ensuring real-time rendering of mathematical calculations.</li>
               </ul>

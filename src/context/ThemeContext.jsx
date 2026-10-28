@@ -12,18 +12,119 @@ export const ACCENT_PRESETS = [
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [accent, setAccent] = useState(ACCENT_PRESETS[0]);
-  const [particlesEnabled, setParticlesEnabled] = useState(true);
+  // Load saved preferences if available
+  const [accent, setAccentState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_accent');
+      if (saved) {
+        const found = ACCENT_PRESETS.find((a) => a.name === saved);
+        if (found) return found;
+      }
+    } catch {
+      // ignore
+    }
+    return ACCENT_PRESETS[0];
+  });
+
+  const [particlesEnabled, setParticlesEnabledState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_particles');
+      if (saved !== null) return JSON.parse(saved);
+    } catch {
+      // ignore
+    }
+    return true;
+  });
+
+  const [soundEnabled, setSoundEnabledState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_sound');
+      if (saved !== null) return JSON.parse(saved);
+    } catch {
+      // ignore
+    }
+    return false;
+  });
+
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [customizerOpen, setCustomizerOpen] = useState(false);
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
   const [activeProjectModal, setActiveProjectModal] = useState(null);
   const [toasts, setToasts] = useState([]);
 
+  const setAccent = (newAccent) => {
+    setAccentState(newAccent);
+    try {
+      localStorage.setItem('portfolio_accent', newAccent.name);
+    } catch {
+      // ignore
+    }
+  };
+
+  const setParticlesEnabled = (val) => {
+    setParticlesEnabledState(val);
+    try {
+      localStorage.setItem('portfolio_particles', JSON.stringify(val));
+    } catch {
+      // ignore
+    }
+  };
+
+  const setSoundEnabled = (val) => {
+    setSoundEnabledState(val);
+    try {
+      localStorage.setItem('portfolio_sound', JSON.stringify(val));
+    } catch {
+      // ignore
+    }
+  };
+
   useEffect(() => {
     document.documentElement.style.setProperty('--accent-color', accent.hex);
     document.documentElement.style.setProperty('--accent-rgb', accent.rgb);
   }, [accent]);
+
+  // Audio synthesizer for micro-interactions
+  const playSound = (type = 'click') => {
+    if (!soundEnabled) return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(750, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+      } else if (type === 'open') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.07);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.07);
+      } else if (type === 'success') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+      }
+    } catch {
+      // ignore audio errors
+    }
+  };
 
   const addToast = (message, type = 'info') => {
     const id = Date.now();
@@ -44,6 +145,9 @@ export function ThemeProvider({ children }) {
         setAccent,
         particlesEnabled,
         setParticlesEnabled,
+        soundEnabled,
+        setSoundEnabled,
+        playSound,
         terminalOpen,
         setTerminalOpen,
         customizerOpen,
